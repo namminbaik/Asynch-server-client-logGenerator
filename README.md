@@ -8,6 +8,9 @@ This is a windows-based system that collects, stores, and manages data(log) gene
 
 The system is divided into four parts: server, client, application that generate data and web page for admin. Among them, the server and client were implemented, and the functions for policy setting of the administrator page and log generation testing were added.
 
+![System overview diagram](https://user-images.githubusercontent.com/67772643/86521011-070d6680-be19-11ea-9d74-fad168131f28.png)
+
+
 ## 각 모듈별 상세 설명
 
 ### 서버 (C#/Asynchronous Socket)
