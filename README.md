@@ -20,8 +20,9 @@ This is a collecting server that receive and process information collected from 
 * Flowchart
 ![Server FlowChart](https://user-images.githubusercontent.com/67772643/86521610-227c6f80-be21-11ea-89a5-cc3a67d95a7d.png)
 
-Function list 기능리스트 미구현/ 구현예정 정보 포함
-화면 스크린샷
+* Function list
+
+* 화면 스크린샷
 
 ### 클라이언트 (C/C++)
 
