@@ -8,7 +8,7 @@ This is a windows-based system that collects, stores, and manages data(log) gene
 
 The system is divided into four parts: server, client, application that generate data and web page for admin. Among them, the server and client were implemented, and the functions for policy setting of the administrator page and log generation testing were added.
 
-![System overview diagram](https://user-images.githubusercontent.com/67772643/86521011-070d6680-be19-11ea-9d74-fad168131f28.png)
+![System overview diagram](https://user-images.githubusercontent.com/67772643/86521595-08db2800-be21-11ea-89a8-41a1d208ae07.png)
 
 
 ## Module Descriptions
@@ -18,7 +18,7 @@ The system is divided into four parts: server, client, application that generate
 This is a collecting server that receive and process information collected from multiple clients via asynchronous socket, and send modified policy information to all connected clients.
 
 * Flowchart
-
+![Server FlowChart](https://user-images.githubusercontent.com/67772643/86521610-227c6f80-be21-11ea-89a5-cc3a67d95a7d.png)
 
 Function list 기능리스트 미구현/ 구현예정 정보 포함
 화면 스크린샷
