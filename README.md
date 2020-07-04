@@ -18,7 +18,7 @@ The system is divided into four parts: server, client, application that generate
 It is a collecting server that receive and process information collected from multiple clients via asynchronous socket, and send modified policy information to all connected clients.
 
 * Flowchart
-![Server FlowChart](https://user-images.githubusercontent.com/67772643/86521610-227c6f80-be21-11ea-89a5-cc3a67d95a7d.png)
+![Server FlowChart](https://user-images.githubusercontent.com/67772643/86522410-32994c80-be2b-11ea-9bdd-7597b6bc0279.png)
 
 * Function list
 
