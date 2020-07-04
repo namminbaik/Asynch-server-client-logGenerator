@@ -11,12 +11,15 @@ The system is divided into four parts: server, client, application that generate
 ![System overview diagram](https://user-images.githubusercontent.com/67772643/86521011-070d6680-be19-11ea-9d74-fad168131f28.png)
 
 
-## 각 모듈별 상세 설명
+## Module Descriptions
 
-### 서버 (C#/Asynchronous Socket)
+### Server (C#/Asynchronous Socket)
 
-비동기 구조의 서버로 다수의 클라이언트에서 수집된 정보를 비동기 소켓을 통해 전송 받아서 처리하고, 수정된 정책 정보를 연결된 모든 클라이언트에 전송한다.
-Flowchart
+This is a collecting server that receive and process information collected from multiple clients via asynchronous socket, and send modified policy information to all connected clients.
+
+* Flowchart
+
+
 Function list 기능리스트 미구현/ 구현예정 정보 포함
 화면 스크린샷
 
