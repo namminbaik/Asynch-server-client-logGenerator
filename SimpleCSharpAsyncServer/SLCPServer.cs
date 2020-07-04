@@ -30,7 +30,7 @@ namespace SimpleCSharpAsyncServer
         {
             Port = port;
             clientSockets = new List<Socket>();
-            Policy.logCreationPolicy = "1";
+            Policy.logCreationPolicy = "0";
             Policy.backupFileStorage = "0";
         }
 
@@ -90,7 +90,7 @@ namespace SimpleCSharpAsyncServer
             try
             {
                 int bytesRead = handler.EndReceive(ar);
-                DataReceiveEvent(bytesRead.ToString());
+
                 if (bytesRead > 0
                     && Encoding.Unicode.GetString(so.buffer, 0, 22) == SocketConstants.BufferStart)
                 {
@@ -163,12 +163,12 @@ namespace SimpleCSharpAsyncServer
                 }
                 else
                 {
-                    DataReceiveEvent(string.Format("Wrong message received: bytes[{0}], message: [{1}] from {2}"
-                        , so.buffer.Length, Encoding.Unicode.GetString(so.buffer, 0, bytesRead)
-                        , handler.RemoteEndPoint.ToString()));
-
                     if (handler.Poll(1000, SelectMode.SelectRead) && (handler.Available == 0))
                         handler.Shutdown(SocketShutdown.Both);
+                    else 
+                        DataReceiveEvent(string.Format("Wrong message received: bytes[{0}], message: [{1}] from {2}"
+                            , so.buffer.Length, Encoding.Unicode.GetString(so.buffer, 0, bytesRead)
+                            , handler.RemoteEndPoint.ToString()));
                 }
 
                 Array.Clear(so.buffer, 0, SocketConstants.BufferSize);
