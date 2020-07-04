@@ -10,9 +10,10 @@ SLCPMonitor::~SLCPMonitor()
 {
 	if (m_hEvent != NULL)
 		CloseHandle(m_hEvent);
-
 	if (m_hSharedMem != NULL)
 		CloseHandle(m_hSharedMem);
+
+	ConsoleClosingComments(3);	// This is for console windows to terminate with 'X' button.
 }
 
 BOOL SLCPMonitor::ConnectEvent()

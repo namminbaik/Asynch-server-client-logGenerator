@@ -7,6 +7,7 @@
 #define BUFFER_SIZE				2048
 #define BUFFER_START			_T("|SLCPSTART|")
 #define BUFFER_END				_T("|SLCPEND|")
+#define STATUS_CHECK_INTERVAL	60	// Seconds
 #define CHECK_STATUS			10
 #define CHECK_STATUS_SUCCESS	11
 #define CHECK_STATUS_FAIL		12
@@ -31,5 +32,6 @@ typedef struct _SHARED_MEMORY_DATA
 
 // Helping function
 TCHAR* contextsTok(TCHAR* lpstr1, const TCHAR* lpstr2);
+VOID ConsoleClosingComments(int interval);	// This is for console windows to terminate with 'X' button.
 
 #endif // !SLCP_COMMON_H

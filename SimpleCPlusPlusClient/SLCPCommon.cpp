@@ -29,3 +29,13 @@ TCHAR* contextsTok(TCHAR* lpstr1, const TCHAR* lpstr2)
 	sOrg = NULL;
 	return lpRetStr;
 }
+
+VOID ConsoleClosingComments(int interval)
+{
+	std::cout << "> SLCPClient will be terminated in "<< interval << " seconds ...\n";
+	for (int i = interval - 1; i > -1; --i)
+	{
+		std::cout << "> " << i << std::endl;
+		Sleep(1000);
+	}
+}

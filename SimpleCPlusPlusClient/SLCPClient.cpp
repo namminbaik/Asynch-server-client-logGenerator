@@ -22,22 +22,43 @@ SLCPClient::SLCPClient()
 	TCHAR* lpszFind = _tcsrchr(m_LogPath, _T('\\'));
 	int nFindIndex = static_cast<int>(lpszFind - m_LogPath + 1);
 	m_LogPath[nFindIndex] = _T('\0');
+
+	// Thread manager setting
+	m_ThreadManager.statusCheck = true;
+	m_ThreadManager.LogGenMonitor = true;
 }
 
 SLCPClient::~SLCPClient()
 {
+	// Terminate network
+	CloseConnect();
+
+	// Terminate threads
+	if (m_hStatusCheckThread != NULL)
+		CloseHandle(m_hStatusCheckThread);
+	if (m_hLogGenMonitorThread != NULL)
+		CloseHandle(m_hLogGenMonitorThread);
+	m_ThreadManager.statusCheck = false;
+	m_ThreadManager.LogGenMonitor = false;
 }
 
 unsigned int __stdcall StatusCheck(void* obj)
 {
-	while (true)
-	{
-		Sleep(1000 * 60);
-		((SLCPClient*)obj)->SendMsg(CHECK_STATUS);
+	int nStatusCheckInterval = 0;
 
-		if (((SLCPClient*)obj)->FindApplication() == 0)
-			((SLCPClient*)obj)->RunApplication(true);
-	}
+	do
+	{
+		if (nStatusCheckInterval < STATUS_CHECK_INTERVAL)
+		{
+			Sleep(1000);
+			nStatusCheckInterval++;
+		}
+		else
+		{
+			((SLCPClient*)obj)->SendMsg(CHECK_STATUS);
+			nStatusCheckInterval = 0;
+		}
+	} while (((SLCPClient*)obj)->m_ThreadManager.statusCheck);
 
 	return 0;
 }
@@ -65,7 +86,11 @@ unsigned int __stdcall LogGenMonitor(void* obj)
 			} while (FindNextFile(hFind, &fd));
 		}
 		FindClose(hFind);
-	} while (true);
+
+		// Check application running
+		if (((SLCPClient*)obj)->FindApplication() == 0)
+			((SLCPClient*)obj)->RunApplication(true);
+	} while (((SLCPClient*)obj)->m_ThreadManager.LogGenMonitor);
 
 	return 0;
 }
@@ -82,10 +107,8 @@ BOOL SLCPClient::Run()
 	if (m_Monitor.CreateSharedMem() == false)
 	{
 		std::cout << "> Failed to Create shared memory ...\n";
-		CloseConnect();
 		return false;
 	}
-
 	m_Monitor.WriteSharedMem(m_SharedData);
 	////////////////////////////////////////////////////////////////////
 
@@ -95,14 +118,25 @@ BOOL SLCPClient::Run()
 		std::cout << "> Failed to run application ...\n";
 	////////////////////////////////////////////////////////////////////
 
-
 	// Start status check thread ///////////////////////////////////////
-	_beginthreadex(NULL, 0, StatusCheck, this, 0, NULL);
+	m_hStatusCheckThread = (HANDLE)_beginthreadex(NULL, 0, StatusCheck, this, 0, NULL);
+
+	if (m_hStatusCheckThread == 0)
+	{
+		std::cout << "> Failed to start status check thread ...\n";
+		return false;
+	}
 	////////////////////////////////////////////////////////////////////
 
 
 	// Start log files monitor thread //////////////////////////////////
-	_beginthreadex(NULL, 0, LogGenMonitor, this, 0, NULL);
+	m_hLogGenMonitorThread = (HANDLE)_beginthreadex(NULL, 0, LogGenMonitor, this, 0, NULL);
+
+	if (m_hLogGenMonitorThread == 0)
+	{
+		std::cout << "> Failed to start log generation monitor thread ...\n";
+		return false;
+	}
 	////////////////////////////////////////////////////////////////////
 
 
@@ -110,10 +144,6 @@ BOOL SLCPClient::Run()
 	Receive();
 	////////////////////////////////////////////////////////////////////
 
-
-	// Exit Program ////////////////////////////////////////////////////
-	ExitProgram();
-	////////////////////////////////////////////////////////////////////
 	return true;
 }
 
@@ -167,7 +197,9 @@ BOOL SLCPClient::Connect(PCWSTR szIPAdress, USHORT port)
 VOID SLCPClient::CloseConnect()
 {
 	if (m_ClientSocket != INVALID_SOCKET)
+	{
 		closesocket(m_ClientSocket);
+	}
 
 	WSACleanup();
 }
@@ -272,7 +304,7 @@ VOID SLCPClient::Receive()
 		}
 		else if (nRecvLen == -1)
 		{
-			std::cout << "> Error : " << WSAGetLastError() << std::endl;
+			std::cout << "> Network connection is closed with error code {" << WSAGetLastError() << "}\n";
 			closesocket(m_ClientSocket);
 			return;
 		}
@@ -487,11 +519,3 @@ BOOL SLCPClient::LogFileBackup(const TCHAR* lpFile)
 		return false;
 	return true;
 }
-
-VOID SLCPClient::ExitProgram()
-{
-	CloseConnect();
-
-	// Do something
-}
-

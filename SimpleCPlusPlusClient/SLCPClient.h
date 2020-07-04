@@ -21,16 +21,23 @@ public:
 	VOID SendMsg(int code, const TCHAR* lpFileName);
 	BOOL LogFileDeletion(const TCHAR* lpFile);
 	BOOL LogFileBackup(const TCHAR* lpFile);
-	VOID ExitProgram();
 
 	friend unsigned int __stdcall StatusCheck(void* obj);
 	friend unsigned int __stdcall LogGenMonitor(void* obj);
+
+	struct
+	{
+		BOOL statusCheck;
+		BOOL LogGenMonitor;
+	}m_ThreadManager;
 
 private:
 	SOCKET m_ClientSocket;
 	SLCPMonitor m_Monitor;
 	SHARED_MEMORY_DATA m_SharedData;
 	TCHAR m_LogPath[MAX_PATH];
+	HANDLE m_hStatusCheckThread;
+	HANDLE m_hLogGenMonitorThread;
 };
 
 #endif // !SLCP_CLIENT_H	
