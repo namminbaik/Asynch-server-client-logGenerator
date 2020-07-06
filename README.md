@@ -53,6 +53,6 @@ It is a program that can simply create logs.
 * Writing/Reading log data using Json format
 * Connecting database for storing log data
 * Handling policy both Online and Offline mode
-* add comment
+* Adding comment
 * Running client as windows service
-* Process File send to server
+* Sending executable file to server
